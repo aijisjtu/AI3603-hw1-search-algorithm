@@ -62,8 +62,7 @@ def A_star(world_map, start_pos, goal_pos):
                 # 若没有留存过代价，或者新探索代价比留存的代价更小，则更新边缘
                 if (g[temp_node[0]][temp_node[1]] == 0) or (temp_cost < g[temp_node[0]][temp_node[1]]):
                     # 评价函数=已知代价+启发函数
-                    priority = g[temp_node[0]][temp_node[1]] + \
-                        heuristic_estimate(temp_node[0], temp_node[1])
+                    priority = temp_cost + heuristic_estimate(temp_node[0], temp_node[1])
                     # 加入优先队列
                     frontier.put((priority, temp_node))
     ###  END CODE HERE  ###
