@@ -28,43 +28,62 @@ def A_star(world_map, start_pos, goal_pos):
     """
 
     ### START CODE HERE ###
+    # g是已知代价函数
     g = np.zeros_like(world_map)
+    # came_from用来记录新扩展边界的由来方向
+    came_from = np.zeros_like(world_map)
     frontier = PriorityQueue()
     frontier.put((0, start_pos))
-    cnt = 0
 
     # 启发函数部分
 
     def heuristic_estimate(id_x, id_y):
         return abs(100-id_x) + abs(100-id_y)
-        # core process
 
+    # core process
+    direction_x = np.array([-1, 0, 1, 0])
+    direction_y = np.array([0, 1, 0, -1])
+    cnt = 0
     while (not frontier.empty()):
-        expand_node = frontier.get()[1]
-        cnt += 1
-        if cnt == 1:
-            path = [np.array(start_pos)]
-        else:
-            path = np.vstack((path, expand_node))
+        frontier_node = frontier.get()[1]
         # 从边缘优先级队列里，依据评价函数，扩展一个代价最小的点
-        if (expand_node[0] == goal_pos[0] and expand_node[1] == goal_pos[1]):
+
+        if (frontier_node[0] == goal_pos[0] and frontier_node[1] == goal_pos[1]):
+            expand_node = goal_pos
+            path = [np.array(goal_pos)]
+            # 以下2行代码与以上2行等效
+            # expand_node = frontier_node
+            # path = [np.array(frontier_node)]
+            while (expand_node[0] != start_pos[0]) or (expand_node[1] != start_pos[1]):
+                came_from_i = came_from[expand_node[0]][expand_node[1]]
+                next_node_x = expand_node[0] - direction_x[came_from_i]
+                next_node_y = expand_node[1] - direction_y[came_from_i]
+                next_node = [next_node_x, next_node_y]
+                # 更新path
+                path = np.vstack((path, next_node))
+                # 更新expand_node
+                expand_node = next_node
             return path
+
         for i in range(0, 4):
-            direction_x = np.array([-1, 0, 1, 0])
-            direction_y = np.array([0, 1, 0, -1])
-            temp_node = [expand_node[0] + direction_x[i],
-                         expand_node[1] + direction_y[i]]
+            temp_node = [frontier_node[0] + direction_x[i],
+                         frontier_node[1] + direction_y[i]]
             # 必须无障碍物，才有可能扩展
             if (not world_map[temp_node[0]][temp_node[1]]):
                 # 已知代价g,自变量是坐标x,y
-                # 从expand_node走出去的代价是expand_node加上两点间路程代价
-                temp_cost = g[expand_node[0]][expand_node[1]]+1
+                # 从frontier_node走出去的代价是frontier_node加上两点间路程代价
+                temp_cost = g[frontier_node[0]][frontier_node[1]]+1
                 # 若没有留存过代价，或者新探索代价比留存的代价更小，则更新边缘
                 if (g[temp_node[0]][temp_node[1]] == 0) or (temp_cost < g[temp_node[0]][temp_node[1]]):
                     # 评价函数=已知代价+启发函数
-                    priority = temp_cost + heuristic_estimate(temp_node[0], temp_node[1])
+                    g[temp_node[0]][temp_node[1]] = temp_cost
+                    priority = temp_cost + \
+                        heuristic_estimate(temp_node[0], temp_node[1])
                     # 加入优先队列
                     frontier.put((priority, temp_node))
+                    cnt += 1
+                    came_from[temp_node[0]][temp_node[1]] = i
+
     ###  END CODE HERE  ###
     return path
 
