@@ -43,7 +43,6 @@ def A_star(world_map, start_pos, goal_pos):
     # core process
     direction_x = np.array([-1, 0, 1, 0])
     direction_y = np.array([0, 1, 0, -1])
-    cnt = 0
     while (not frontier.empty()):
         frontier_node = frontier.get()[1]
         # 从边缘优先级队列里，依据评价函数，扩展一个代价最小的点
@@ -81,7 +80,6 @@ def A_star(world_map, start_pos, goal_pos):
                         heuristic_estimate(temp_node[0], temp_node[1])
                     # 加入优先队列
                     frontier.put((priority, temp_node))
-                    cnt += 1
                     came_from[temp_node[0]][temp_node[1]] = i
 
     ###  END CODE HERE  ###
