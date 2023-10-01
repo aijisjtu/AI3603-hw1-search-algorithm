@@ -6,9 +6,18 @@ import matplotlib.pyplot as plt
 MAP_PATH = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), '3-map/map.npy')
 
+
 ### START CODE HERE ###
 # This code block is optional. You can define your utility function and class in this block if necessary.
+# 启发函数部分
 from queue import PriorityQueue
+SQRT_2 = pow(2, 0.5)
+def heuristic_estimate(id_x, id_y):
+    diff_x = abs(100-id_x)
+    diff_y = abs(100-id_y)
+    # 类似于 pi/4 方向上的两个最邻近的距离
+    return SQRT_2*min(diff_x, diff_y)+max(diff_x, diff_y)-min(diff_x, diff_y)
+
 ###  END CODE HERE  ###
 
 
@@ -27,11 +36,9 @@ def Improved_A_star(world_map, start_pos, goal_pos):
     """
 
     ### START CODE HERE ###
-    SQRT_2 = pow(2, 0.5)
     # came_from用来记录新扩展边界的由来方向
     came_from = np.zeros_like(world_map)
     # g是已知代价函数
-
     g = np.zeros_like(world_map)
     direction_x = np.array(
         [-1, 0, 0, 1,
@@ -59,13 +66,6 @@ def Improved_A_star(world_map, start_pos, goal_pos):
 
     frontier = PriorityQueue()
     frontier.put((0, start_pos))
-
-    # 启发函数部分
-    def heuristic_estimate(id_x, id_y):
-        diff_x = abs(100-id_x)
-        diff_y = abs(100-id_y)
-        # 类似于 pi/4 方向上的两个最邻近的距离
-        return SQRT_2*min(diff_x, diff_y)+max(diff_x, diff_y)-min(diff_x, diff_y)
 
         # core process
     while (not frontier.empty()):
