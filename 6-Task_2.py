@@ -102,17 +102,17 @@ def Improved_A_star(world_map, start_pos, goal_pos):
                 # 已知代价g,自变量是坐标x,y
                 # 从frontier_node走出去的代价是frontier_node加上两点间路程代价
                 if i >= 4:
-                    temp_cost = g[frontier_node[0]
+                    new_cost = g[frontier_node[0]
                                   ][frontier_node[1]]+SQRT_2+steer_cost
                 else:
-                    temp_cost = g[frontier_node[0]
+                    new_cost = g[frontier_node[0]
                                   ][frontier_node[1]]+1+steer_cost
                 # 若没有留存过代价，或者新探索代价比留存的代价更小，则更新边缘
-                if (g[temp_node[0]][temp_node[1]] == 0) or (temp_cost < g[temp_node[0]][temp_node[1]]):
+                if (g[temp_node[0]][temp_node[1]] == 0) or (new_cost < g[temp_node[0]][temp_node[1]]):
 
                     # 评价函数=已知代价+启发函数
-                    g[temp_node[0]][temp_node[1]] = temp_cost
-                    priority = temp_cost +\
+                    g[temp_node[0]][temp_node[1]] = new_cost
+                    priority = new_cost +\
                         heuristic_estimate(
                             temp_node[0], temp_node[1])
                     # 加入优先队列
